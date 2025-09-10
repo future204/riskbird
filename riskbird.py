@@ -7,16 +7,12 @@ class RiskBird:
         self.cookie: str = cookie
         if self.cookie == None:
             self.load_config("config.yaml")
-        self.ua: str = (
-            "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/133.0.6833.84 Safari/537.36"
-        )
         self.headers: dict = {
-            "User-Agent": self.ua,
+            "User-Agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/133.0.6833.84 Safari/537.36",
             "Cookie": str(self.cookie),
             "App-Device": "WEB",
         }
         self.semaphore = asyncio.Semaphore(max_concurrency)
-        self.batch_mode: bool = False
 
     def gen_config(self, file: str = "config.yaml"):
         if not os.path.exists(file):
@@ -182,7 +178,6 @@ class RiskBird:
             return company_info
 
     async def batch_company_info(self, company_file: str):
-        self.batch_mode = True
         company_list = self.load_company_file(company_file)
         filepath = f"results-{self.timestamp()}.csv"
         async with httpx.AsyncClient(verify=False) as client:
@@ -213,7 +208,7 @@ class RiskBird:
 
 
 def main():
-    parser = argparse.ArgumentParser(description="RiskBird 公司信息查询工具")
+    parser = argparse.ArgumentParser(description="RiskBird 企业信息查询工具")
     parser.add_argument("-n", "--name", type=str, help="查询单个公司信息")
     parser.add_argument("-f", "--file", type=str, help="批量查询公司列表文件")
     parser.add_argument("-c", "--cookie", type=str, required=False, help="认证 Cookie")
