@@ -178,9 +178,20 @@ class RiskBird:
             )
             return company_info
 
-    async def batch_company_info(self, company_file: str):
-        company_list = self.load_company_file(company_file)
-        filepath = f"results-{self.timestamp()}.csv"
+    async def batch_company_info(
+        self, company_file: str = None, company_list=None, filepath=None
+    ):
+        if company_file:
+            company_list = self.load_company_file(company_file)
+        elif not company_list:
+            self.merror(
+                "batch_company_info参数错误:company_file或company_list必须提供一个"
+            )
+            sys.exit(1)
+        if filepath:
+            filepath = filepath
+        else:
+            filepath = f"results-{self.timestamp()}.csv"
         async with httpx.AsyncClient(verify=False) as client:
             results = []
             for coro in tqdm.as_completed(
