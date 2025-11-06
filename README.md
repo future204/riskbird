@@ -20,7 +20,7 @@ options:
   -f FILE, --file FILE  批量查询公司列表文件
   -c COOKIE, --cookie COOKIE
                         认证 Cookie
-  -m MAX, --max MAX     最大并发数 (默认 5)
+  -m MAX, --max MAX     最大并发数 (默认 1)
 ```
 
 ## 2 COOKIE配置
