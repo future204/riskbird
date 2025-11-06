@@ -1,3 +1,4 @@
+#!/usr/bin/env /usr/bin/python
 import httpx, csv, os, sys, datetime, asyncio, argparse, yaml
 from tqdm.asyncio import tqdm
 
@@ -104,7 +105,7 @@ class RiskBird:
             return response.json()
         except Exception as e:
             self.merror(f"查询 {searchKey} 出错: {e}")
-            return None
+            raise e
 
     def load_company_file(self, filepath: str) -> list[str]:
         try:
@@ -164,7 +165,7 @@ class RiskBird:
                     )
         except Exception as e:
             self.merror(f"处理查询数据出错\n{data}")
-            sys.exit(1)
+            raise e
         return result
 
     async def fetch_and_save(self, client, search_company: str, filepath: str):
@@ -234,7 +235,10 @@ def main():
     if args.name:
         asyncio.run(rb.get_company_info(args.name))
     elif args.file:
-        asyncio.run(rb.batch_company_info(args.file))
+        try:
+            asyncio.run(rb.batch_company_info(args.file))
+        except (KeyboardInterrupt):
+            sys.exit(1)
     else:
         parser.print_help()
 
