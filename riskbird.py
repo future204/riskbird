@@ -170,6 +170,7 @@ class RiskBird:
     async def fetch_and_save(self, client, search_company: str, filepath: str):
         async with self.semaphore:
             data = await self.search_company(client, search_company)
+            await asyncio.sleep(2)
             data["搜索名称"] = search_company
             company_info: dict = self.deal_info(data)
             self.dict_append_to_csvfile(
